@@ -1,0 +1,75 @@
+html, body{
+	margin: 0;
+	padding: 0;
+}
+
+*{
+	box-sizing: border-box;
+}
+
+body{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+#app {
+	max-width: 1000px;
+	width: 100%;
+	margin: auto;
+}
+
+button {
+	margin: 1rem;
+	padding: 1rem 2rem;
+	cursor: pointer;
+}
+article{
+
+	background-color: #f2f2f2;
+
+	&:nth-of-type(even){
+		background-color: rgb(224, 211, 181);
+	}
+
+	.header{
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		cursor: pointer;
+		padding: 1rem;
+
+		.title{
+			margin-right: 2rem;
+		}
+
+		.replies{
+			font-family: monospace;
+		}
+	}
+
+	
+
+	.comment{
+		display: none;
+
+		.by{
+			color: brown;
+		}
+	}
+
+	&.js-active{
+		.comment{
+			display: block
+		}
+	}
+}
+
+.comment{
+	padding: 1rem 3rem;
+
+	p{
+		margin: 0;
+		padding: 0;
+	}
+}
