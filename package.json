@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watchAll",
-    "start": "webpack-dev-server --hot"
+    "test": "jest",
+    "test:watch": "jest --watchAll",
+    "dev" : "webpack",
+    "start": "webpack-dev-server --hot --open"
   },
   "author": "",
   "license": "ISC",
@@ -13,7 +15,6 @@
     "@babel/core": "^7.3.3",
     "@babel/plugin-transform-runtime": "^7.2.0",
     "@babel/preset-env": "^7.3.1",
-    "axios": "^0.18.0",
     "babel-jest": "^24.1.0",
     "babel-loader": "^8.0.5",
     "css-loader": "^2.1.0",

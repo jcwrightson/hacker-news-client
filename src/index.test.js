@@ -1,11 +1,9 @@
 // import axios from 'axios'
 import { fetchTopStories, fetchItem, renderStories, renderComments } from './index'
-import { resolve } from 'url';
-import { rejects } from 'assert';
 
-const topstories = [19177859, 19174081, 19177077, 19168075]
+const storyContainer = document.createElement('div')
 
-const app = document.createElement('div')
+const topStories = [19177859, 19174081, 19177077, 19168075]
 
 
 describe('Fetch Top Stories', ()=>{
@@ -15,14 +13,14 @@ describe('Fetch Top Stories', ()=>{
 	const mockFetch = (url) => {
 		fetchedUrl = url
 		return Promise.resolve({
-			json: () => topstories
+			json: () => topStories
 		})
 	}
 
 	it('Should return an array of story ids', () => {
 		
 		fetchTopStories(mockFetch).then(res => {
-			expect(res).toEqual(topstories)
+			expect(res).toEqual(topStories)
 		})
 
 	})
@@ -35,24 +33,73 @@ describe('Fetch Top Stories', ()=>{
 
 describe('Render Stories', ()=>{
 	let fetchedItemCount = 0
-	const mockFetchItem = (id) => {
+	let perPage = 2
+	let page = 1
+	
+	const mockFetch = () => {
 		return Promise.resolve(fetchedItemCount++)
 	}
 
-	it('Only fetches max (n) stories: n=2', ()=>{
+	it('Only fetches max (n) stories: n=2', async ()=>{
 
-		renderStories(mockFetchItem, app, topstories, 2).then(res => {
+		await renderStories(mockFetch, storyContainer, topStories, perPage, page).then(res => {
 			expect(fetchedItemCount).toEqual(2)
 		})
-
 	})
 
-	it('Fetches all stories', ()=>{
+	it('Fetches all stories', async ()=>{
 		fetchedItemCount = 0
-		renderStories(mockFetchItem, app, topstories, topstories.length).then(res => {
-			expect(fetchedItemCount).toEqual(topstories.length)
-			console.log(app)
+		perPage = -1
+		page = 1
+		
+		await renderStories(mockFetch, storyContainer, topStories, perPage, page).then(res => {
+			expect(fetchedItemCount).toEqual(topStories.length)
 		})
-
 	})
+
+	it('Fetches page 2 of 2 stories per page', async ()=>{
+		fetchedItemCount = 0
+		perPage = 2
+		page = 2
+		
+		await renderStories(mockFetch, storyContainer, topStories, perPage, page).then(res => {
+			expect(fetchedItemCount).toEqual(2)
+		})
+	})
+
+	it('Fetches page 4 of 1 stories per page', async ()=>{
+		fetchedItemCount = 0
+		perPage = 1
+		page = 4
+		
+		await renderStories(mockFetch, storyContainer, topStories, perPage, page).then(res => {
+			expect(fetchedItemCount).toEqual(1)
+		})
+	})
+
+	it('Fetches 0 stories when trying to fetch an invalid page ', async ()=>{
+		fetchedItemCount = 0
+		perPage = 1
+		page = 5
+		
+		await renderStories(mockFetch, storyContainer, topStories, perPage, page).then(res => {
+			expect(fetchedItemCount).toEqual(0)
+		})
+	})
+})
+
+
+describe('Render Comments', ()=>{
+	let fetchedItemCount = 0
+	
+	let mockFetch = () => {
+		return Promise.resolve(fetchedItemCount++)
+	}
+
+	it('Fetches 3 comments', async ()=>{
+		await renderComments(mockFetch, [1,2,3]).then(res => {
+			expect(fetchedItemCount).toBe(3)
+		})
+	})
+
 })

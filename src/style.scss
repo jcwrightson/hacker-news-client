@@ -11,25 +11,35 @@ body{
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
+	font-family: sans-serif
 }
 
+h1 {
+	font-size: 3rem;
+	margin-top: 3rem;
+
+}
 #app {
-	max-width: 1000px;
+	max-width: 1200px;
 	width: 100%;
 	margin: auto;
 }
 
 button {
-	margin: 1rem;
+
 	padding: 1rem 2rem;
 	cursor: pointer;
+	margin: 2rem auto;
+	width: 100%;
+	border: none;
+	background-color: #ff6600;
 }
 article{
 
-	background-color: #f2f2f2;
+	background-color: #fafafa;
 
 	&:nth-of-type(even){
-		background-color: rgb(224, 211, 181);
+		background-color: #f6f6ef;
 	}
 
 	.header{
@@ -66,7 +76,7 @@ article{
 }
 
 .comment{
-	padding: 1rem 3rem;
+	padding: 1rem 1rem 1rem 3rem;
 
 	p{
 		margin: 0;

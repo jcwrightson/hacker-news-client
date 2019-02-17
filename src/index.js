@@ -1,6 +1,5 @@
-// import axios from 'axios'
+let app = undefined
 const fetch = require('node-fetch')
-let app = null
 const url = "https://hacker-news.firebaseio.com/v0"
 
 const store = {
@@ -36,37 +35,45 @@ export const handleStorySelect = (e, story) => {
 
 export const renderComments = (fetch, kids) => {
 
-	kids.map(id => {
+	return Promise.resolve(
 
-		fetchItem(fetch, id).then(item => {
+		kids.map(id => {
 
-			if(!item.deleted){
-
-				console.log(item)
+			fetchItem(fetch, id).then(item => {
 
 				const div = document.createElement('div')
 				div.id = item.id
 				div.classList.add('comment')
-				div.innerHTML = `<span class="by"><em>${item.by}</em></span> &mdash; ${item.text}`
+
+				if(!item.deleted){
+
+					div.innerHTML = `<span class="by"><em>${item.by}</em></span> &mdash; ${item.text}`
+				
+				}else{
+					div.innerHTML = `<span><em>Comment Deleted by User</em></span>`
+				}
+
+
 				document.getElementById(item.parent).appendChild(div)
 
 				if(item.kids){
 					renderComments(fetch, item.kids)
 				}
-			}
+
+			})
 
 		})
-
-	})
+	)
+	
 }
 
-export const renderStories = (fetchItem, app, stories, perPage, page) => {
+export const renderStories = (fetchItem, element, stories, perPage, page) => {
 
 	return Promise.resolve(
 
 		stories.map((id, index) => {
-			
-			if(index < (perPage * page) && index > (perPage * (page-1)) || perPage === -1){ 
+
+			if(index < (perPage * page) && index >= (perPage * (page - 1)) || perPage === -1){
 
 				fetchItem(fetch, id).then(story => {
 
@@ -78,8 +85,8 @@ export const renderStories = (fetchItem, app, stories, perPage, page) => {
 							<div class="title">${story.title} &mdash; <em>${story.by}</em></div>
 							<div class="replies">${story.kids ? story.kids.length + ' Comments' : ''}</div>
 						<div>
-					`			
-					document.getElementById('stories').appendChild(article)
+					`	
+					element.appendChild(article)
 				})
 			}
 		})
@@ -106,7 +113,8 @@ export const showMore = () => {
 
 export const handleShowMore = () => {
 	store.page++
-	renderStories(fetchItem, app, store.topStories, store.perPage, store.page)
+	const storyElem = document.getElementById('stories')
+	renderStories(fetchItem, storyElem, store.topStories, store.perPage, store.page)
 	showMore()
 }
 
@@ -120,8 +128,9 @@ export const init = (elementId) => {
 	fetchTopStories(fetch).then(stories => {
 
 		store.topStories = [...stories]
-		renderStories(fetchItem, app, store.topStories, store.perPage, 1)
+		renderStories(fetchItem, storyContainer, store.topStories, store.perPage, 1)
 		showMore()
+
 	}).catch(err => {
 		throw new Error('Error', err)
 	})
